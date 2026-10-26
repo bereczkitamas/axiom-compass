@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AXIOM // Emberi Értékrend és Ideológia Iránytű</title>
+  <!-- Tailwind CSS CDN + Class-based Dark Mode konfiguráció (Alapértelmezett: Világos / Light Mode) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- FELSŐ NAVIGÁCIÓS FEJLÉC -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand / Cím -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-sm text-lg font-extrabold">
+          🧭
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 dark:text-white" id="ui-app-title">
+            AXIOM <span class="text-sky-600 dark:text-sky-400 font-semibold">// Értékrend Iránytű</span>
+          </h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block" id="ui-app-subtitle">
+            Fedezd fel, melyik értékrend áll hozzád a legközelebb 30 ellentétpár mentén.
+          </p>
+        </div>
+      </div>
+
+      <!-- Fő Nézetváltó Fülek (Tabs) -->
+      <nav class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/80 dark:border-slate-700" role="tablist">
+        <button id="tab-btn-sliders" data-tab="sliders" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white dark:bg-slate-900 text-sky-600 dark:text-sky-400 shadow-sm">
+          🎚️ <span data-i18n="tabSliders">Értékcsúszkák</span>
+        </button>
+        <button id="tab-btn-compass" data-tab="compass" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+          🧭 <span data-i18n="tabCompass">2D Iránytű</span>
+        </button>
+        <button id="tab-btn-quiz" data-tab="quiz" class="tab-btn px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+          ⚡ <span data-i18n="tabQuiz">Kérdőív</span>
+        </button>
+      </nav>
+
+      <!-- Gyorsműveletek, Nyelv és Világos/Sötét téma -->
+      <div class="flex items-center gap-1.5">
+        <button id="btn-reset" class="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition" title="Nullázás">
+          🔄 <span class="hidden md:inline" data-i18n="btnReset">Alaphelyzet</span>
+        </button>
+        <button id="btn-share" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 hover:bg-sky-100 dark:bg-sky-900/30 dark:hover:bg-sky-900/50 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 transition">
+          🔗 <span class="hidden sm:inline" data-i18n="btnShare">Megosztás</span>
+        </button>
+        <button id="btn-lang" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition">
+          HU / EN
+        </button>
+        <button id="btn-theme" class="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition" title="Világos / Sötét mód váltása">
+          <span id="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- FŐ TARTALOM (LETISZTULT 2 OSZLOPOS ELRENDEZÉS) -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- JOBB VAGY BAL FŐ TERÜLET (8 OSZLOP): CSÚSZKÁK / 2D IRÁNYTŰ / KÉRDŐÍV -->
+    <section class="lg:col-span-8 space-y-5 order-2 lg:order-1">
+
+      <!-- ====================================================================== -->
+      <!-- NÉZET 1: LETISZTULT ÉRTÉKCSÚSZKÁK (LÉPÉSRŐL LÉPÉSRE KATEGÓRIÁKKAL)     -->
+      <!-- ====================================================================== -->
+      <div id="view-sliders" class="space-y-4">
+
+        <!-- Kategória Fülek (Step-by-Step navigáció: egyszerre csak 5 csúszka látszik alapból!) -->
+        <div class="surface-card rounded-2xl p-3 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div id="category-filter-pills" class="flex flex-wrap items-center gap-1.5">
+              <!-- JS tölti fel: 1..6 kategória + Összes -->
+            </div>
+
+            <!-- Extra címkék és Eltérés szűrő kapcsolók -->
+            <div class="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-400">
+              <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                <input type="checkbox" id="chk-show-details" class="rounded accent-sky-600" />
+                <span data-i18n="chkShowDetails">Hatás-címkék (EU5)</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                <input type="checkbox" id="chk-only-outliers" class="rounded accent-rose-600" />
+                <span data-i18n="filterOutliersOnly">Csak az eltérések</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Egysoros, barátságos jelmagyarázat -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-4 flex-wrap">
+              <span class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-white border-2 border-sky-600 inline-block"></span>
+                <span data-i18n="legendUser">Saját értéked</span>
+              </span>
+              <span class="flex items-center gap-1.5">
+                <span class="w-5 h-3 rounded bg-amber-500/20 border border-dashed border-amber-600 inline-block"></span>
+                <span id="legend-range-text" data-i18n="legendRange">Kiválasztott ideológia sávja [Min..Max]</span>
+              </span>
+            </div>
+            <span class="text-[11px]" data-i18n="legendTip">Kattints bármelyik végpont nevére a gyors beállításhoz!</span>
+          </div>
+        </div>
+
+        <!-- Csúszkák Konténer -->
+        <div id="axes-sliders-container" class="space-y-4">
+          <!-- JS tölti fel -->
+        </div>
+
+        <!-- Kategória Léptető Lábléc (Előző / Következő kategória) -->
+        <div id="category-stepper-footer" class="surface-card rounded-2xl p-3.5 flex items-center justify-between">
+          <button id="btn-prev-cat" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition">
+            ← <span data-i18n="btnPrevCat">Előző kategória</span>
+          </button>
+          <span id="stepper-indicator" class="text-xs font-semibold text-slate-500 dark:text-slate-400">
+            1 / 6 kategória
+          </span>
+          <button id="btn-next-cat" class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white shadow-sm transition">
+            <span data-i18n="btnNextCat">Következő kategória</span> →
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ====================================================================== -->
+      <!-- NÉZET 2: DINAMIKUS 2D IRÁNYTŰ                                          -->
+      <!-- ====================================================================== -->
+      <div id="view-compass" class="hidden space-y-4">
+        <div class="surface-card rounded-2xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <span>🧭</span>
+                <span data-i18n="compassTitle">Dinamikus 2D Érték- és Ideológia Iránytű</span>
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="compassSubtitle">
+                Válaszd ki szabadon az X és Y tengelyt, vagy használd a kész sablonokat!
+              </p>
+            </div>
+
+            <!-- Gyors Iránytű Sablonok -->
+            <div class="flex flex-wrap gap-1.5" id="compass-preset-btns">
+              <button data-x="cat:economy" data-y="cat:power" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 hover:bg-sky-100 transition">
+                🏛️ Politikai (Gazdaság × Hatalom)
+              </button>
+              <button data-x="pow_decent_cent" data-y="cul_innov_trad" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 transition">
+                👑 EU5 (Centralizáció × Tradíció)
+              </button>
+              <button data-x="cat:society" data-y="cat:culture" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 transition">
+                🌍 Társadalom × Kultúra
+              </button>
+              <button data-x="cat:ethics" data-y="cat:psychology" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-pink-50 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 border border-pink-200 dark:border-pink-800 hover:bg-pink-100 transition">
+                🧠 Erkölcs × Életfilozófia
+              </button>
+            </div>
+          </div>
+
+          <!-- X és Y Tengely Választó Legördülők -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 subtle-box p-3.5 rounded-xl">
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-sky-700 dark:text-sky-400 mb-1" data-i18n="labelXAxis">
+                X-Tengely (Vízszintes: Bal -100 ↔ Jobb +100)
+              </label>
+              <select id="compass-select-x" class="w-full rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 px-3 py-2 text-xs sm:text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:border-sky-500">
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-1" data-i18n="labelYAxis">
+                Y-Tengely (Függőleges: Alsó -100 ↔ Felső +100)
+              </label>
+              <select id="compass-select-y" class="w-full rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 px-3 py-2 text-xs sm:text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-300">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" id="chk-compass-all-zones" checked class="rounded accent-amber-600" />
+              <span data-i18n="chkShowAllZones">Összes ideológia értékhatár-zónájának megjelenítése</span>
+            </label>
+            <span class="text-slate-400" data-i18n="compassClickHint">💡 Kattints bármelyik pontra a térképen az összevetéshez!</span>
+          </div>
+
+          <!-- Canvas Konténer -->
+          <div class="relative w-full h-[500px] sm:h-[560px] rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+            <canvas id="compass-canvas" class="w-full h-full block"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================== -->
+      <!-- NÉZET 3: KALIBRÁLÓ GYORSTESZT (30 ÁLLÍTÁS)                              -->
+      <!-- ====================================================================== -->
+      <div id="view-quiz" class="hidden space-y-4">
+        <div class="surface-card rounded-2xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+              <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                <span>⚡</span>
+                <span data-i18n="quizTitle">Értékrend-Kalibráló Kérdőív (30 Állítás)</span>
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5" data-i18n="quizSubtitle">
+                Válaszolj az állításokra, és a csúszkák automatikusan beállnak a válaszaid alapján!
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="quiz-progress-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+                0 / 30
+              </span>
+              <button id="btn-finish-quiz" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white transition">
+                🧭 <span data-i18n="btnViewCompass">Iránytű megtekintése</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="quiz-questions-container" class="space-y-3">
+            <!-- JS tölti fel -->
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- BAL/JOBB OLDALSÁV (4 OSZLOP): LETISZTULT EREDMÉNY ÉS IDEOLÓGIA VÁLASZTÓ -->
+    <aside class="lg:col-span-4 space-y-4 order-1 lg:order-2 lg:sticky lg:top-20">
+
+      <!-- 1. KÁRTYA: SAJÁT PROFILOD EREDMÉNYE (TOP EGYEZÉSEK) -->
+      <section class="surface-card rounded-2xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400 flex items-center gap-1.5">
+            <span>🏆</span>
+            <span data-i18n="rankingHeader">Legközelebbi Értékrendek</span>
+          </h2>
+          <button id="btn-random" class="text-[11px] font-medium text-slate-500 hover:text-sky-600 dark:text-slate-400 transition">
+            🎲 <span data-i18n="btnRandom">Véletlen teszt</span>
+          </button>
+        </div>
+
+        <!-- Top Rangsor Lista (Alapból Top 5, lenyitható mind a 16-ra) -->
+        <div id="match-ranking-list" class="space-y-1.5">
+          <!-- JS tölti fel -->
+        </div>
+
+        <button id="btn-toggle-all-ranks" class="w-full py-1.5 text-xs font-semibold text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white transition text-center border-t border-slate-100 dark:border-slate-800 pt-2">
+          ▼ Összes (16) irányzat megjelenítése
+        </button>
+      </section>
+
+      <!-- 2. KÁRTYA: KIVÁLASZTOTT IDEOLÓGIA SÁV-VETÍTÉSE (ÖSSZEHASONLÍTÁS) -->
+      <section class="surface-card rounded-2xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+            <span>🏛️</span>
+            <span data-i18n="presetHeader">Összehasonlított Ideológia</span>
+          </h2>
+          <!-- Sáv-vetítés KI/BE kapcsoló -->
+          <button id="btn-toggle-overlay" class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700/60 transition">
+            👁️ <span id="overlay-btn-label" data-i18n="btnHideOverlay">Sávok: BE</span>
+          </button>
+        </div>
+
+        <!-- Ideológia Legördülő Választó -->
+        <div>
+          <select id="select-preset" class="w-full rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-amber-500">
+          </select>
+        </div>
+
+        <!-- Kiválasztott Ideológia Kompakt Összegzés -->
+        <div class="subtle-box rounded-xl p-3 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span id="preset-detail-icon" class="text-xl shrink-0">🌹</span>
+              <div class="min-w-0">
+                <h3 id="preset-detail-name" class="font-bold text-sm text-slate-900 dark:text-white truncate">Szociáldemokrata</h3>
+                <p id="preset-detail-tagline" class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1"></p>
+              </div>
+            </div>
+            <div id="preset-detail-match" class="text-lg font-extrabold text-emerald-600 dark:text-emerald-400 shrink-0">85%</div>
+          </div>
+
+          <p id="preset-detail-desc" class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed"></p>
+
+          <!-- Zóna-statisztika sáv -->
+          <div class="grid grid-cols-3 gap-1 text-center bg-white dark:bg-slate-900 p-1.5 rounded-lg border border-slate-200/80 dark:border-slate-800 text-xs">
+            <div>
+              <div id="stat-in-range" class="font-bold text-emerald-600 dark:text-emerald-400">22/30</div>
+              <div class="text-[10px] text-slate-500" data-i18n="statInRange">Zónán belül</div>
+            </div>
+            <div>
+              <div id="stat-near-range" class="font-bold text-amber-600 dark:text-amber-400">5/30</div>
+              <div class="text-[10px] text-slate-500" data-i18n="statNearRange">Határeset</div>
+            </div>
+            <div>
+              <div id="stat-out-range" class="font-bold text-rose-600 dark:text-rose-400">3/30</div>
+              <div class="text-[10px] text-slate-500" data-i18n="statOutRange">Eltérés</div>
+            </div>
+          </div>
+
+          <button id="btn-load-preset-values" class="w-full py-2 px-3 rounded-lg text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-white transition shadow-sm flex items-center justify-center gap-1.5">
+            📥 <span data-i18n="btnLoadPreset">Ideológia értékeinek betöltése a csúszkákra</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. KÁRTYA: 6 FŐ DIMENZIÓ KOMPAKT MÉRLEGE -->
+      <section class="surface-card rounded-2xl p-4 space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400" data-i18n="catSummaryTitle">
+            6 Fő Dimenzió Összesítése
+          </h3>
+          <span id="cat-summary-compare-label" class="text-[11px] text-amber-600 dark:text-amber-400 font-medium"></span>
+        </div>
+        <div id="category-summary-grid" class="space-y-2">
+          <!-- JS tölti fel kompakt vízszintes sávokként -->
+        </div>
+      </section>
+
+      <!-- 4. KÁRTYA: DOMINÁNS JELLEMZŐK (KOMPAKT CHIPS) -->
+      <section class="surface-card rounded-2xl p-4 space-y-2">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+          <span>📜</span>
+          <span data-i18n="traitsHeader">Domináns Érték-Módosítóid</span>
+        </h2>
+        <div id="dominant-traits-list" class="flex flex-wrap gap-1.5">
+          <!-- JS tölti fel -->
+        </div>
+      </section>
+
+    </aside>
+
+  </main>
+
+  <!-- ÉRTESÍTŐ TOAST -->
+  <div id="toast-notification" class="fixed bottom-5 right-5 z-50 hidden px-4 py-3 rounded-xl bg-slate-900 dark:bg-emerald-600 text-white text-sm font-semibold shadow-xl transition-all">
+    Link a vágólapra másolva!
+  </div>
+
+  <!-- FŐ ALKALMAZÁS LOGIKA -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
