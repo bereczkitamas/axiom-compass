@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AXIOM // Emberi Értékrend és Ideológia Iránytű</title>
+  <title>AXIOM // Human Value & Ideology Compass</title>
   <!-- Tailwind CSS CDN + Class-based Dark Mode konfiguráció (Alapértelmezett: Világos / Light Mode) -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -153,16 +153,16 @@
             <!-- Gyors Iránytű Sablonok -->
             <div class="flex flex-wrap gap-1.5" id="compass-preset-btns">
               <button data-x="cat:economy" data-y="cat:power" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 hover:bg-sky-100 transition">
-                🏛️ Politikai (Gazdaság × Hatalom)
+                🏛️ <span data-i18n="compassPresetPolitical">Political (Economy × Power)</span>
               </button>
               <button data-x="pow_decent_cent" data-y="cul_innov_trad" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 transition">
-                👑 EU5 (Centralizáció × Tradíció)
+                👑 <span data-i18n="compassPresetEU5">EU5 (Centralization × Tradition)</span>
               </button>
               <button data-x="cat:society" data-y="cat:culture" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 transition">
-                🌍 Társadalom × Kultúra
+                🌍 <span data-i18n="compassPresetSocCul">Society × Culture</span>
               </button>
               <button data-x="cat:ethics" data-y="cat:psychology" class="compass-quick-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-pink-50 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 border border-pink-200 dark:border-pink-800 hover:bg-pink-100 transition">
-                🧠 Erkölcs × Életfilozófia
+                🧠 <span data-i18n="compassPresetEthPsy">Ethics × Life Philosophy</span>
               </button>
             </div>
           </div>

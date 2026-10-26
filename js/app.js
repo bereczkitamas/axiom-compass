@@ -59,7 +59,11 @@ const I18N = {
     quizOptAgree: 'Inkább igen',
     quizOptStronglyAgree: 'Teljesen egyetértek',
     optGroupCategories: '── 6 Összesített Fő Dimenzió ──',
-    optGroupAxes: '── 30 Konkrét Értékpár ──'
+    optGroupAxes: '── 30 Konkrét Értékpár ──',
+    compassPresetPolitical: 'Politikai (Gazdaság × Hatalom)',
+    compassPresetEU5: 'EU5 (Centralizáció × Tradíció)',
+    compassPresetSocCul: 'Társadalom × Kultúra',
+    compassPresetEthPsy: 'Erkölcs × Életfilozófia'
   },
   en: {
     appTitle: 'AXIOM <span class="text-sky-600 dark:text-sky-400 font-semibold">// Value Compass</span>',
@@ -114,13 +118,17 @@ const I18N = {
     quizOptAgree: 'Agree',
     quizOptStronglyAgree: 'Strongly Agree',
     optGroupCategories: '── 6 Aggregated Core Dimensions ──',
-    optGroupAxes: '── 30 Specific Value Pairs ──'
+    optGroupAxes: '── 30 Specific Value Pairs ──',
+    compassPresetPolitical: 'Political (Economy × Power)',
+    compassPresetEU5: 'EU5 (Centralization × Tradition)',
+    compassPresetSocCul: 'Society × Culture',
+    compassPresetEthPsy: 'Ethics × Life Philosophy'
   }
 };
 
-// Alkalmazás Állapot (State) – Alapértelmezett: Light Mode + 1. kategória (hogy ne legyen zsúfolt!)
+// Alkalmazás Állapot (State) – Alapértelmezett: Angol nyelv + Light Mode + 1. kategória
 const state = {
-  lang: 'hu',
+  lang: 'en',
   isDark: false,
   activeTab: 'sliders',
   selectedPresetId: 'soc_dem',
